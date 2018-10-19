@@ -17,4 +17,4 @@ measure of confidence.
 Follows asap.
 
 ## Acknowledgements
-The name of this tool was proposed by @kba. Parts of the code for METS handling has been inspired by [metsrw](https://github.com/artefactual-labs/mets-reader-writer/).
+The name of this tool was proposed by @kba. Parts of the code for METS handling was inspired by [metsrw](https://github.com/artefactual-labs/mets-reader-writer/).
