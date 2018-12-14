@@ -19,11 +19,11 @@ def cli(mets,out_dir,order_file):
     mets = Mets.read(mets)
 
     #
-    # iterate over all logical 
+    # iterate over all elements of the logical struct map
     for logical in mets.get_logicals():
         physical = mets.get_first_physical_for_logical(logical)
         if physical is not None:
-            pass
+            print(mets.get_hocr_for_physical(physical).file_name)
 
 if __name__ == '__main__':
     cli()
