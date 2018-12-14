@@ -2,6 +2,8 @@
 
 from lxml import etree
 
+import os
+
 ns = {
      'mets': 'http://www.loc.gov/METS/',
      'xlink' : "http://www.w3.org/1999/xlink",
@@ -37,7 +39,7 @@ class Physical:
         self.phys_id = node.get("ID")
         self.hocr_id = node.xpath("./mets:fptr[starts-with(@FILEID, \"HOCR\")]", namespaces=ns)[0].get("FILEID")
 
-class Hocr:
+class FileHocr:
     """
     Represents a hOCR-related file node in the fulltext file group.
     """
@@ -103,7 +105,7 @@ class Mets:
 
     def get_logicals(self):
         """
-        Returns an iterator on the elements if the logical struct map.
+        Returns an iterator on the elements in the logical struct map.
         """
         if self.structMap_logical is not None:
             stack = []
@@ -141,4 +143,4 @@ class Mets:
         :param Physical physical: Div element from the METS's structMap[@TYPE="physical"].
         """
         if self.fileGrp_hocr is not None:
-            return Hocr(self.fileGrp_hocr.xpath("./mets:file[@ID=\"%s\"]" % physical.hocr_id, namespaces=ns)[0])
+            return FileHocr(self.fileGrp_hocr.xpath("./mets:file[@ID=\"%s\"]" % physical.hocr_id, namespaces=ns)[0])

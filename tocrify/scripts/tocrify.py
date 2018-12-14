@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 
+import os
 import click
 
 from tocrify import Mets
+from tocrify import Hocr
 
 @click.command()
 @click.argument('mets', type=click.File('rb'))
@@ -13,6 +15,7 @@ def cli(mets,out_dir,order_file):
     """ METS: Input METS XML """
     
     click.echo("%s" % out_dir, err=True)
+    mwd = os.path.abspath(os.path.dirname(mets.name))
 
     #
     # read in METS
@@ -23,7 +26,12 @@ def cli(mets,out_dir,order_file):
     for logical in mets.get_logicals():
         physical = mets.get_first_physical_for_logical(logical)
         if physical is not None:
-            print(mets.get_hocr_for_physical(physical).file_name)
+            hocr = Hocr.read("%s/%s" % (mwd, mets.get_hocr_for_physical(physical).file_name))
+            if hocr:
+                hocr.ingest_structure(logical)
+            else:
+                click.echo(mets.get_hocr_for_physical(physical).file_name, err=True)
+            
 
 if __name__ == '__main__':
     cli()
