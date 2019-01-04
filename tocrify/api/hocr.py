@@ -20,6 +20,9 @@ class Hocr:
 
         self.tree = None
         self.path = ""
+        self.text = ""
+        self.index_struct = {}
+        self.index = 0
 
     @classmethod
     def read(cls, source):
@@ -56,12 +59,37 @@ class Hocr:
         """
         self.path = path
 
+        # collect text and save line numbers
+        for carea in self.get_careas():
+            for par in self.get_pars_in_carea(carea):
+                for line in self.get_lines_in_par(par):
+                    if line.text:
+                        self.text += line.text
+                        for i in range(0, len(line.text)):
+                            self.index_struct[self.index] = line
+                            self.index += 1
+        
+
     def get_careas(self):
         """
         Returns an iterator on the careas elements.
         """
-        for carea in self.tree.xpath()
+        for carea in self.tree.xpath(".//xhtml:div[@class=\"ocr_carea\"]", namespaces=ns):
             yield carea
+
+    def get_pars_in_carea(self, carea):
+        """
+        Returns an iterator on the paragraphs within a carea element.
+        """
+        for par in carea.xpath("./xhtml:p", namespaces=ns):
+            yield par
+
+    def get_lines_in_par(self, par):
+        """
+        Returns an iterator on the lines within a p element.
+        """
+        for line in par.xpath("./xhtml:span[@class=\"ocr_line\"]", namespaces=ns):
+            yield line
 
     def ingest_structure(self, logical):
         """
@@ -69,5 +97,10 @@ class Hocr:
         represented by the mets.Logical parameter.
         :param Logical logical: The logical element to be ingested. 
         """
-        if logical.label != "Text":
+        if logical.label != "Text" or (not self.text):
             pass
+        print(logical.label)
+
+        begin = -1
+        # restriction on match quality, parameter?
+        minimum = len(logical.label) / 2
