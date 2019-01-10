@@ -88,9 +88,34 @@ class Hocr:
     def get_lines_in_par(self, par):
         """
         Returns an iterator on the lines within a p element.
+        :param Element par: The paragraph element to iterate on.
         """
         for line in par.xpath("./xhtml:span[@class=\"ocr_line\"]", namespaces=ns):
             yield line
+    
+    def __get_best_insert_index(self, text, label, minimum=0):
+        """
+        Finds the "closest" match (wrt. to Levenshtein distance)
+        for a shorter within a longer string. Returns -1 if a
+        given minimal string distance is not reached.
+        :param String text: The longer string.
+        :param String label: The shorter string.
+        :param Integer minimum: The maximal allowed edit distance between the two.
+        """
+        if len(text) >= len(label):
+            if not minimum:
+                minimum = len(label) / 2
+            index = -1
+            # the moving window
+            for k in range(0, len(text) - len(label)):
+                distance = Levenshtein.distance(label, text[k:k+len(label)])
+                if distance <= minimum:
+                    minimum = distance
+                    index = k
+                if distance == 0:
+                    break
+            return index
+        return -1
 
     def ingest_structure(self, logical):
         """
@@ -100,19 +125,8 @@ class Hocr:
         """
         # many structures are (regretfully) only labelled with 'Text'
         if len(logical.label) > 0 and self.text and logical.label != "Text":
-
-            # restriction on match quality, parameter?
-            minimum = len(logical.label) / 2
             
-            # the moving window
-            begin = -1
-            for k in range(0, len(self.text) - len(logical.label)):
-                distance = Levenshtein.distance(logical.label, self.text[k:k+len(logical.label)])
-                if distance <= minimum:
-                    minimum = distance
-                    begin = k
-                if distance == 0:
-                    break
+            begin = self.__get_best_insert_index(self.text, logical.label)
 
             # we have a suitable match (i.e. below the quality restriction),
             # full line labels are assumed,
