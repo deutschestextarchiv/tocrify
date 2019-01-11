@@ -28,9 +28,21 @@ def cli(mets,out_dir,order_file):
         if physical is not None:
             hocr = Hocr.read("%s/%s" % (mwd, mets.get_hocr_for_physical(physical).file_name))
             if hocr:
-                hocr.ingest_structure(logical)
+                ingested = hocr.ingest_structure(logical)
             else:
                 click.echo(mets.get_hocr_for_physical(physical).file_name, err=True)
+
+    #
+    # fill the order file and print updated hOCR files
+    for order in sorted(mets.file_order.keys()):
+        file_hocr = mets.get_hocr_for_physical(mets.get_physical(mets.file_order[order]))
+        hocr = Hocr.read("%s/%s" % (mwd, file_hocr.file_name))
+        out_filename = "%s/%s" % (out_dir, os.path.basename(file_hocr.file_name))
+        if order_file:
+            order_file.write("%s\n" % out_filename)
+        out_file = open(out_filename, "wb")
+        hocr.write(out_file)
+        print(out_filename)
             
 
 if __name__ == '__main__':

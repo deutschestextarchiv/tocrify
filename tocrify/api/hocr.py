@@ -12,6 +12,31 @@ ns = {
 XLINK = "{%s}" % ns['xlink']
 XHTML = "{%s}" % ns['xhtml']
 
+hocr2mets = {
+    ("chapter", 0 ) : "ocr_chapter",
+    ("section", 0 ) : "ocr_chapter",
+    ("title_page", 0 ) : "ocr_title_page",
+    ("contents", 0 ) : "ocr_contents",
+    ("preface", 0 ) : "ocr_preface",
+    ("illustration", 0 ) : "ocr_illustration",
+    ("index", 0 ) : "ocr_index",
+    ("cover_back", 0 ) : "ocr_chapter",
+    ("dedication", 0 ) : "ocr_dedication",
+    ("map", 0 ) : "ocr_map",
+    ("additional", 0 ) : "ocr_additional",
+    ("chapter", 1 ) : "ocr_section",
+    ("section", 1 ) : "ocr_section",
+    ("preface", 1 ) : "ocr_preface",
+    ("illustration", 1 ) : "ocr_illustration",
+    ("dedication", 1 ) : "ocr_dedication",
+    ("title_page", 1 ) : "",
+    ("contents", 1 ) : "ocr_contents",
+    ("chapter", 2 ) : "ocr_subsection",
+    ("section", 2 ) : "ocr_subsection",
+    ("chapter", 3 ) : "ocr_subsubsection",
+    ("section", 3 ) : "ocr_subsubsection"
+}
+
 class Hocr:
 
     def __init__(self):
@@ -24,6 +49,13 @@ class Hocr:
         self.text = ""
         self.index_struct = {}
         self.index = 0
+    
+    def write(self, stream):
+        """
+        Writes the hOCR tree to stream.
+        :param stream: The output stream.
+        """
+        stream.write(etree.tostring(self.tree.getroot(), encoding="utf-8"))
 
     @classmethod
     def read(cls, source):
@@ -123,6 +155,8 @@ class Hocr:
         represented by the mets.Logical parameter.
         :param Logical logical: The logical element to be ingested. 
         """
+        ingested = False
+
         # many structures are (regretfully) only labelled with 'Text'
         if len(logical.label) > 0 and self.text and logical.label != "Text":
             
@@ -155,7 +189,11 @@ class Hocr:
                                 par.getparent().remove(par)
 
                 # TODO: compare number of lines in paragraph to number of matched lines!!!
-                print(len(pars[0]),len(cmp_lines))
+                if len(pars[0]) == len(cmp_lines):
+                    # replace paragraph elment with hOCR element representation
+                    pars[0].tag = XHTML + "h%i" % logical.depth
+                    # replace type attribute
+                    pars[0].set("class", hocr2mets[(logical.type,logical.depth)])
+                    ingested = True
 
-                for cmp_line in cmp_lines:
-                    print(cmp_line.text)
+        return ingested
