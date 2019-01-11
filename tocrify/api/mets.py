@@ -2,6 +2,8 @@
 
 from lxml import etree
 
+import os
+
 ns = {
      'mets': 'http://www.loc.gov/METS/',
      'xlink' : "http://www.w3.org/1999/xlink",
@@ -37,7 +39,7 @@ class Physical:
         self.phys_id = node.get("ID")
         self.hocr_id = node.xpath("./mets:fptr[starts-with(@FILEID, \"HOCR\")]", namespaces=ns)[0].get("FILEID")
 
-class Hocr:
+class FileHocr:
     """
     Represents a hOCR-related file node in the fulltext file group.
     """
@@ -61,6 +63,7 @@ class Mets:
         self.structMap_physical = None
         self.structLink = None
         self.fileGrp_hocr = None
+        self.file_order = {}
 
     @classmethod
     def read(cls, source):
@@ -80,18 +83,18 @@ class Mets:
         :param str path: Path to a METS document.
         """
         i = cls()
-        i._fromfile(path)
+        i.__fromfile(path)
         return i
 
-    def _fromfile(self, path):
+    def __fromfile(self, path):
         """
         Reads in METS from a given file source.
         :param str path: Path to a METS document.
         """
         self.tree = etree.parse(path)
-        self._spur(self.tree)
+        self.__spur(self.tree)
 
-    def _spur(self, tree):
+    def __spur(self, tree):
         """
         Assigns the METS-related class members given an XML tree.
         """
@@ -99,11 +102,27 @@ class Mets:
         self.structMap_physical = tree.getroot().find(".//" + METS + "structMap[@TYPE='PHYSICAL']")
         self.structLink = tree.getroot().find(".//" + METS + "structLink")
         self.fileGrp_hocr = tree.getroot().find(".//" + METS + "fileGrp[@USE='FULLTEXT HOCR']")
+        self.__determine_file_order()
 
+    def __determine_file_order(self):
+        """
+        Determines the file order given the ORDER attributes of the divs in the physical structMap
+        """
+        for physSequence in self.structMap_physical.findall("./" + METS + "div[@TYPE='physSequence']"):
+            for div in physSequence.findall(METS + "div"):
+                self.file_order[int(div.get("ORDER"))] = div.get("ID")
+
+    def get_physical(self, phys_id):
+        """
+        Returns the element of the physical structMap which has the given
+        phys_id.
+        :param str phys_id: Id of the requested element.
+        """
+        return Physical(self.structMap_physical.xpath(".//mets:div[@ID=\"%s\"]" % phys_id, namespaces=ns)[0])
 
     def get_logicals(self):
         """
-        Returns an iterator on the elements if the logical struct map.
+        Returns an iterator on the elements in the logical struct map.
         """
         if self.structMap_logical is not None:
             stack = []
@@ -141,4 +160,4 @@ class Mets:
         :param Physical physical: Div element from the METS's structMap[@TYPE="physical"].
         """
         if self.fileGrp_hocr is not None:
-            return Hocr(self.fileGrp_hocr.xpath("./mets:file[@ID=\"%s\"]" % physical.hocr_id, namespaces=ns)[0])
+            return FileHocr(self.fileGrp_hocr.xpath("./mets:file[@ID=\"%s\"]" % physical.hocr_id, namespaces=ns)[0])
