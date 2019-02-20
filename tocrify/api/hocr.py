@@ -20,6 +20,7 @@ hocr2mets = {
     ("preface", 0 ) : "ocr_preface",
     ("illustration", 0 ) : "ocr_illustration",
     ("index", 0 ) : "ocr_index",
+    ("index", 1 ) : "ocr_index",
     ("cover_back", 0 ) : "ocr_chapter",
     ("dedication", 0 ) : "ocr_dedication",
     ("map", 0 ) : "ocr_map",
@@ -160,7 +161,7 @@ class Hocr:
         # many structures are (regretfully) only labelled with 'Text'
         if len(logical.label) > 0 and self.text and logical.label != "Text":
             
-            begin = self.__get_best_insert_index(self.text, logical.label)
+            begin = self.__get_best_insert_index(self.text.lower(), logical.label.lower())
 
             # we have a suitable match (i.e. below the quality restriction),
             # full line labels are assumed,
@@ -183,7 +184,12 @@ class Hocr:
                             pars.append(par)
                         elif pars[0] != par:
                             pars[0].append(self.index_struct[begin + l])
-                            par.remove(self.index_struct[begin + l])
+
+                            # Fixme: something is odd here, try catch should not be necessary
+                            try:
+                                par.remove(self.index_struct[begin + l])
+                            except:
+                                pass
                             # eventually delete paragraph
                             if len(par) == 0:
                                 par.getparent().remove(par)
