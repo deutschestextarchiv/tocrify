@@ -126,7 +126,7 @@ class Hocr:
         for line in par.xpath("./xhtml:span[@class=\"ocr_line\"]", namespaces=ns):
             yield line
     
-    def __get_best_insert_index(self, text, label, minimum=0):
+    def __get_best_insert_index(self, text, label, minimum=0, lower=False):
         """
         Finds the "closest" match (wrt. to Levenshtein distance)
         for a shorter within a longer string. Returns -1 if a
@@ -134,7 +134,12 @@ class Hocr:
         :param String text: The longer string.
         :param String label: The shorter string.
         :param Integer minimum: The maximal allowed edit distance between the two.
+        :param Boolean lower: Compute the edit distance on lowercased strings.
         """
+        if lower:
+            text = text.lower()
+            label = label.lower()
+
         if len(text) >= len(label):
             if not minimum:
                 minimum = len(label) / 2
@@ -161,7 +166,7 @@ class Hocr:
         # many structures are (regretfully) only labelled with 'Text'
         if len(logical.label) > 0 and self.text and logical.label != "Text":
             
-            begin = self.__get_best_insert_index(self.text.lower(), logical.label.lower())
+            begin = self.__get_best_insert_index(self.text, logical.label, 0, True)
 
             # we have a suitable match (i.e. below the quality restriction),
             # full line labels are assumed,
