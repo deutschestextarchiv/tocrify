@@ -20,6 +20,7 @@ hocr2mets = {
     ("preface", 0 ) : "ocr_preface",
     ("illustration", 0 ) : "ocr_illustration",
     ("index", 0 ) : "ocr_index",
+    ("index", 1 ) : "ocr_index",
     ("cover_back", 0 ) : "ocr_chapter",
     ("dedication", 0 ) : "ocr_dedication",
     ("map", 0 ) : "ocr_map",
@@ -125,7 +126,7 @@ class Hocr:
         for line in par.xpath("./xhtml:span[@class=\"ocr_line\"]", namespaces=ns):
             yield line
     
-    def __get_best_insert_index(self, text, label, minimum=0):
+    def __get_best_insert_index(self, text, label, minimum=0, lower=False):
         """
         Finds the "closest" match (wrt. to Levenshtein distance)
         for a shorter within a longer string. Returns -1 if a
@@ -133,7 +134,12 @@ class Hocr:
         :param String text: The longer string.
         :param String label: The shorter string.
         :param Integer minimum: The maximal allowed edit distance between the two.
+        :param Boolean lower: Compute the edit distance on lowercased strings.
         """
+        if lower:
+            text = text.lower()
+            label = label.lower()
+
         if len(text) >= len(label):
             if not minimum:
                 minimum = len(label) / 2
@@ -160,7 +166,7 @@ class Hocr:
         # many structures are (regretfully) only labelled with 'Text'
         if len(logical.label) > 0 and self.text and logical.label != "Text":
             
-            begin = self.__get_best_insert_index(self.text, logical.label)
+            begin = self.__get_best_insert_index(self.text, logical.label, 0, True)
 
             # we have a suitable match (i.e. below the quality restriction),
             # full line labels are assumed,
@@ -183,7 +189,12 @@ class Hocr:
                             pars.append(par)
                         elif pars[0] != par:
                             pars[0].append(self.index_struct[begin + l])
-                            par.remove(self.index_struct[begin + l])
+
+                            # Fixme: something is odd here, try catch should not be necessary
+                            try:
+                                par.remove(self.index_struct[begin + l])
+                            except:
+                                pass
                             # eventually delete paragraph
                             if len(par) == 0:
                                 par.getparent().remove(par)
