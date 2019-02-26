@@ -46,10 +46,11 @@ class Hocr:
         """
 
         self.tree = None
+        self.insert_index = 0
         self.path = ""
         self.text = ""
-        self.index_struct = {}
-        self.index = 0
+        self.line_index_struct = {}
+        self.line_index = 0
     
     def write(self, stream):
         """
@@ -100,8 +101,8 @@ class Hocr:
                     if line.text:
                         self.text += line.text
                         for i in range(0, len(line.text)):
-                            self.index_struct[self.index] = line
-                            self.index += 1
+                            self.line_index_struct[self.line_index] = line
+                            self.line_index += 1
         
 
     def get_careas(self):
@@ -125,6 +126,25 @@ class Hocr:
         """
         for line in par.xpath("./xhtml:span[@class=\"ocr_line\"]", namespaces=ns):
             yield line
+
+    def get_next_unmodified_carea(self):
+        """
+        Returns the next available unmodified carea (or None).
+        """
+        try:
+            return self.line_index_struct[self.insert_index].getparent().getparent()
+        except:
+            return None
+
+    def set_carea_as_modified(self, carea):
+        """
+        Set the given carea as modified by adjusting the insert index.
+        :param Element carea: The carea element to set as modified
+        """
+        for i in range(self.insert_index, len(self.line_index_struct)):
+            if self.line_index_struct[self.insert_index].getparent().getparent() != carea:
+                break
+            self.insert_index = i
     
     def __get_best_insert_index(self, text, label, minimum=0, lower=False):
         """
@@ -145,7 +165,7 @@ class Hocr:
                 minimum = len(label) / 2
             index = -1
             # the moving window
-            for k in range(0, len(text) - len(label)):
+            for k in range(self.insert_index, len(text) - len(label)):
                 distance = Levenshtein.distance(label, text[k:k+len(label)])
                 if distance <= minimum:
                     minimum = distance
@@ -178,8 +198,8 @@ class Hocr:
                 pars = []
                 for l in range(0, end - begin):
                     # append each line only once!
-                    if (not cmp_lines) or cmp_lines[-1] != self.index_struct[begin + l]:
-                        cmp_lines.append(self.index_struct[begin + l])
+                    if (not cmp_lines) or cmp_lines[-1] != self.line_index_struct[begin + l]:
+                        cmp_lines.append(self.line_index_struct[begin + l])
                         # get paragraph of line
                         par = cmp_lines[-1].getparent()
                         # add it to the first paragraph containing the match and subsequenty
@@ -188,11 +208,11 @@ class Hocr:
                         if not pars:
                             pars.append(par)
                         elif pars[0] != par:
-                            pars[0].append(self.index_struct[begin + l])
+                            pars[0].append(self.line_index_struct[begin + l])
 
                             # Fixme: something is odd here, try catch should not be necessary
                             try:
-                                par.remove(self.index_struct[begin + l])
+                                par.remove(self.line_index_struct[begin + l])
                             except:
                                 pass
                             # eventually delete paragraph
@@ -200,11 +220,36 @@ class Hocr:
                                 par.getparent().remove(par)
 
                 # TODO: compare number of lines in paragraph to number of matched lines!!!
+                #print(len(pars[0]),len(cmp_lines))
                 if len(pars[0]) == len(cmp_lines):
                     # replace paragraph elment with hOCR element representation
                     pars[0].tag = XHTML + "h%i" % logical.depth
                     # replace type attribute
                     pars[0].set("class", hocr2mets[(logical.type,logical.depth)])
                     ingested = True
+                    # adjust the position for searching for the next match
+                    self.insert_index = end + 1
+        
+        # textless structures
+        else:
+            # covers and title pages span the whole page, insert an element directly under ocr_page
+            if logical.type == "cover_front" or logical.type == "cover_back" or logical.type == "title_page":
+                cover = etree.Element(XHTML + "div")
+                cover.set("class", "ocr_%s" % logical.type)
+                insert_node = self.tree.getroot().find(".//" + XHTML + "div[@class='ocr_page']")
+                insert_node.insert(0, cover)
+                for child in insert_node[1:]:
+                    cover.append(child)
+            # not sure what to do with textless structures of type other
+            elif logical.type == u"other":
+                pass
+            # generic insertion
+            else:
+                carea = self.get_next_unmodified_carea()
+                if carea is not None:
+                    struct = etree.Element(XHTML + "h%i" % logical.depth)
+                    struct.set("class", hocr2mets[(logical.type,logical.depth)])
+                    carea.insert(0, struct)
+                    self.set_carea_as_modified(carea)
 
         return ingested
