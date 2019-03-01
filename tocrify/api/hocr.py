@@ -223,7 +223,7 @@ class Hocr:
                 #print(len(pars[0]),len(cmp_lines))
                 if len(pars[0]) == len(cmp_lines):
                     # replace paragraph elment with hOCR element representation
-                    pars[0].tag = XHTML + "h%i" % logical.depth + 1
+                    pars[0].tag = XHTML + "h%i" % (logical.depth + 1)
                     # replace type attribute
                     pars[0].set("class", hocr2mets[(logical.type,logical.depth)])
                     ingested = True
@@ -247,7 +247,7 @@ class Hocr:
             else:
                 carea = self.get_next_unmodified_carea()
                 if carea is not None:
-                    struct = etree.Element(XHTML + "h%i" % logical.depth + 1)
+                    struct = etree.Element(XHTML + "h%i" % (logical.depth + 1))
                     struct.set("class", hocr2mets[(logical.type,logical.depth)])
                     carea.insert(0, struct)
                     self.set_carea_as_modified(carea)
