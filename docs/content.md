@@ -147,8 +147,37 @@ class: title-slide
     * zusätzliche Nummerierung
     * Groß-/Kleinschreibung
   + suboptimale Textqualität durch Einsatz veralteter FineReader-Version (i.e. „präimpact“)
-2. Fehlende Label
-  + 35 von 298 Büchern mit Kapiteltitel *Text*
+2. fehlende Label
+  + 35 von 256 Büchern mit Kapiteltitel *Text*
+3. fehlerhafte Layouterkennung
+  + Überschriften in verschiedene Absätze unterteilt: gelöst
+  + Überschriften auf verschiedene Absätze verteilt: noch nicht gelöst
+4. fehlendes Cropping
+
+---
+
+class: title-slide
+
+# DSDK-Korpus
+
+---
+
+# DSDK-Korpus - aktueller Stand
+
+- 256 Bücher konvertiert und indiziert
+  + Teile der Frankfurter Lieferung
+  + komplett Antiqua
+  + 13.397.229 Tokens
+- Zugriff über
+  + http://www.deutschestextarchiv.de/dtaq
+    * Einzelwerkebene
+    * Text-/Bildansicht
+    * Ticketsystem
+  + http://kaskade.dwds.de/dstar
+    * Korpusebene
+    * Suche und KWIC-Ansicht
+    * Frequenzverläufe
+    * Kollokationsanalyse
 
 ---
 
