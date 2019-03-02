@@ -169,11 +169,11 @@ class: title-slide
   + komplett Antiqua
   + 13.397.229 Tokens
 - Zugriff über
-  + http://www.deutschestextarchiv.de/dtaq
+  1. http://www.deutschestextarchiv.de/dtaq
     * Einzelwerkebene
     * Text-/Bildansicht
     * Ticketsystem
-  + http://kaskade.dwds.de/dstar
+  2. http://kaskade.dwds.de/dstar
     * Korpusebene
     * Suche und KWIC-Ansicht
     * Frequenzverläufe

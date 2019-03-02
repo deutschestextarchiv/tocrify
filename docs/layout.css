@@ -24,6 +24,7 @@ ul > li > ol > li { font-size:1.5rem }
 ol > li > ul > li { font-size:1.5rem }
 
 ul > li > ul > li > ul > li { font-size:1.2rem }
+ul > li > ol > li > ul > li { font-size:1.2rem }
 
 .center { text-align:center }
 .diasys { color:#595; font-weight:bold }
