@@ -61,6 +61,39 @@ class: title-slide
 
 ---
 
+# Konvertierungsworkflow - Baseline
+
+- triviales Vorgehen:
+  ```xml
+  <tei>
+    <teiHeader><!-- Informationen aus MODS --></teiHeader>
+    <text>
+      <body>
+        <p>
+          <!-- OCR-Volltext -->
+        </p>
+      </body>
+    </text>
+  </tei>
+  ```
+- valide aber nicht **adäquat**
+
+---
+
+# Konvertierungsworkflow - Idee
+
+- Nachnutzung der manuell gesammelten Strukturdaten (`<mets:structMap TYPE="LOGICAL" />`)
+  ```xml
+  <mets:div ID="log9156964"
+            TYPE="chapter"
+            LABEL="Geologische Uebersicht"
+            ORDER="7"/>
+  ```
+- Auszeichnung der entsprechenden Volltextpassagen in der OCR
+- Übernahme nach DTABf
+
+---
+
 class: title-slide
 
 # Danke für Ihre Aufmerksamkeit
