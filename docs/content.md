@@ -42,11 +42,11 @@ class: title-slide
 
 class: title-slide
 
-# Konvertierungsworkflow
+# Konvertierung
 
 ---
 
-# Konvertierungsworkflow - Motivation
+# Konvertierung - Motivation
 
 - (proto-)typische Ausgangslage:
   + METS-XML mit (MODS-)Metadaten sowie manuellen Strukturauszeichnungen (häufig einfach „abgeschriebene“ Inhaltsverzeichnisse)
@@ -61,7 +61,7 @@ class: title-slide
 
 ---
 
-# Konvertierungsworkflow - Baseline
+# Konvertierung - Baseline
 
 - triviales Vorgehen:
   ```xml
@@ -80,7 +80,7 @@ class: title-slide
 
 ---
 
-# Konvertierungsworkflow - Idee
+# Konvertierung - Idee
 
 - Nachnutzung der manuell gesammelten Strukturdaten (`<mets:structMap TYPE="LOGICAL" />`)
   ```xml
@@ -96,7 +96,7 @@ class: title-slide
 
 ---
 
-# Konvertierungsworkflow - Herausforderungen
+# Konvertierung - Herausforderungen
 
 - Verknüpfung zwischen Struktur und Text auf Seitenebene (keine Lokalisierung im Text)
   + Lösungsansatz: Lokalisierung des Strukturelements auf der Seite über Textvergleich
@@ -109,22 +109,33 @@ class: title-slide
   
 ---
 
-# Konvertierungsworkflow - Workflow
+# Konvertierung - Workflow
 
-1. Konvertierung ABBYY-FineReader-XML nach hOCR
+1. **Konvertierung** ABBYY-FineReader-XML nach hOCR
   - mit Hilfe eines XSLT-Stylesheets (https://github.com/OCR-D/format-converters)
-2. Anreicherung der hOCR-Dateien mit Strukturelementen
+2. **Anreicherung** der hOCR-Dateien mit Strukturelementen
   - Python-Skript `tocrify` (https://github.com/deutschestextarchiv/tocrify)
-3. Aggregation der Seiten- zur Dokumentebene
+3. **Aggregation** der Seiten- zur Dokumentebene
   - Anpassung der hOCR-Tool-Suite (https://github.com/tmbdev/hocr-tools)
-4. Konvertierung von hOCR nach DTABf
+4. **Konvertierung** von hOCR nach DTABf
   - mit Hilfe eines XSLT-Stylesheets (https://github.com/OCR-D/format-converters)
   - Integration der MODS-Metadaten in den TEI-Header
-5. Integration in die Korpusinfrastruktur des Zentrums Sprache sowie in DTAQ
+5. **Integration** in die Korpusinfrastruktur des Zentrums Sprache sowie in DTAQ
 
 ---
 
-# Konvertierungsworkflow - Probleme
+# Konvertierung - `tocrify`
+
+- Ziel: *Lokalisierung* des Strukturelements auf der Seite (Ermittlung der Koordinaten)
+- Rezept:
+  + Vergleich des zu lokalisierenden Textes `\(t\)` mit allen Position in der OCR `\(o_i\in O=o_1\ldots o_n\)`
+  + minimaler Editierabstand zwischen `\(t\)` und `\(o_i\ldots o_{i+|t|}\)` als Platzierungskriterium
+  + Inklusion aller Zeilen, die Teile der optimalen OCR-Sequenz enthalten
+- Auszeichnung der ermittelten Zeilen als `TYPE` (i.e. Strukturtyp nach METS)
+
+---
+
+# Konvertierung - Probleme
 
 ---
 
