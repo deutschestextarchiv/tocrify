@@ -27,7 +27,37 @@ class: title-slide
 
 # Inhalte
 
-- 
+1. Konvertierungworkflow
+  - `tocrify`: Werkzeug zur Anreicherung der OCR-Ergebnisse
+  - `hocr2tei`: XSLT-Stylesheets zur Konvertierung der angereicherten OCR nach DTABf
+2. DSDK-Korpus
+  - aktueller Stand der Konvertierung
+  - Anwendungsbeispiele der Korpusinfrastruktur des Zentrums Sprache auf die DSDK-Daten
+3. Diskussion
+  - nächste Schritte und ToDos
+  - Optimierungsmöglichkeiten im Workflow
+  - Perspektiven für die Volltextdigitalisierung in wissenschaftlichen Bibliotheken
+
+---
+
+class: title-slide
+
+# Konvertierungsworkflow
+
+---
+
+# Konvertierungsworkflow
+
+- (proto-)typische Ausgangslage:
+  + METS-XML mit (MODS-)Metadaten sowie manuellen Strukturauszeichnungen (häufig einfach „abgeschriebene“ Inhaltsverzeichnisse)
+  + Bilddateien (verzeichnet im METS)
+  + OCR-Dateien (auf Seitenebene verknüpft mit den Bildern)
+- Ziel:
+  + **adäquate** Repräsentation der Volltexte in TEI
+    * *Best practice* für Textdaten in den digitalen Geisteswissenschaften
+    * dokumentbezogenes Format
+    * **DTA-Basisformat** (DTABf) als de-facto Standard für historische Textdaten
+  + Anschluss an bestehende Forschungsinfrastrukturen
 
 ---
 
