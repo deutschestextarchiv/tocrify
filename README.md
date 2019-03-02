@@ -18,7 +18,7 @@ measure of confidence.
 (tested versions 3.5 and 3.6) installation.
 
 ### virtualenv
-Using [`virtualenv`](https://virtualenv.pypa.io/en/stable/) is highly recommended, although not strictly necessary for installing `timur`. It may be installed via:
+Using [`virtualenv`](https://virtualenv.pypa.io/en/stable/) is highly recommended, although not strictly necessary for installing `tocrify`. It may be installed via:
 ```console
 $ [sudo] pip install virtualenv
 ```
