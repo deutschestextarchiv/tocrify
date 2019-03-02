@@ -168,16 +168,15 @@ class: title-slide
   + Teile der Frankfurter Lieferung
   + komplett Antiqua
   + 13.397.229 Tokens
-- Zugriff über
-  1. http://www.deutschestextarchiv.de/dtaq
-    * Einzelwerkebene
-    * Text-/Bildansicht
-    * Ticketsystem
-  2. http://kaskade.dwds.de/dstar
-    * Korpusebene
-    * Suche und KWIC-Ansicht
-    * Frequenzverläufe
-    * Kollokationsanalyse
+- Zugriff über http://www.deutschestextarchiv.de/dtaq
+  + Einzelwerkebene
+  + Text-/Bildansicht
+  + Ticketsystem
+- Zugriff über http://kaskade.dwds.de/dstar
+  + Korpusebene
+  + Suche und KWIC-Ansicht
+  + Frequenzverläufe
+  + Kollokationsanalyse
 
 ---
 
