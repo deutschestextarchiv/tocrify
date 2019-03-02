@@ -14,7 +14,32 @@ logical entities are mapped to the OCR fulltext using a moving window and Levens
 measure of confidence.
 
 ## Installation
-Follows asap.
+`tocrify` is implemented in Python 3. In the following, we assume a working Python 3
+(tested versions 3.5 and 3.6) installation.
+
+### virtualenv
+Using [`virtualenv`](https://virtualenv.pypa.io/en/stable/) is highly recommended, although not strictly necessary for installing `timur`. It may be installed via:
+```console
+$ [sudo] pip install virtualenv
+```
+Create a virtual environement in a subdirectory of your choice (e.g. `env`) using
+```console
+$ virtualenv -p python3 env
+```
+and activate it.
+```console
+$ . env/bin/activate
+```
+
+### Python requirements
+`tocrify` uses various 3rd party Python packages which may best be installed using `pip`:
+```console
+(env) $ pip install -r requirements.txt
+```
+Finally, `tocrify` itself can be installed via `pip`:
+```console
+(env) $ pip install .
+```
 
 ## Acknowledgements
 The name of this tool was proposed by @kba. Parts of the code for METS handling was inspired by [metsrw](https://github.com/artefactual-labs/mets-reader-writer/).
