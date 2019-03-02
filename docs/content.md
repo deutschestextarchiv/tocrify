@@ -49,15 +49,15 @@ class: title-slide
 # Konvertierung - Motivation
 
 - (proto-)typische Ausgangslage:
-  + METS-XML mit (MODS-)Metadaten sowie manuellen Strukturauszeichnungen (häufig einfach „abgeschriebene“ Inhaltsverzeichnisse)
-  + Bilddateien (verzeichnet im METS)
-  + OCR-Dateien (auf Seitenebene verknüpft mit den Bildern)
+    + METS-XML mit (MODS-)Metadaten sowie manuellen Strukturauszeichnungen (häufig einfach „abgeschriebene“ Inhaltsverzeichnisse)
+    + Bilddateien (verzeichnet im METS)
+    + OCR-Dateien (auf Seitenebene verknüpft mit den Bildern)
 - Ziel:
-  + **adäquate** Repräsentation der Volltexte in TEI
-    * *Best practice* für Textdaten in den digitalen Geisteswissenschaften
-    * dokumentbezogenes Format
-    * **DTA-Basisformat** (DTABf) als de-facto Standard für historische Textdaten
-  + Anschluss an bestehende Forschungsinfrastrukturen
+    + **adäquate** Repräsentation der Volltexte in TEI
+        * *Best practice* für Textdaten in den digitalen Geisteswissenschaften
+        * dokumentbezogenes Format
+        * **DTA-Basisformat** (DTABf) als de-facto Standard für historische Textdaten
+    + Anschluss an bestehende Forschungsinfrastrukturen
 
 ---
 
