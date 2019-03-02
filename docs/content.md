@@ -46,7 +46,7 @@ class: title-slide
 
 ---
 
-# Konvertierungsworkflow
+# Konvertierungsworkflow - Motivation
 
 - (proto-)typische Ausgangslage:
   + METS-XML mit (MODS-)Metadaten sowie manuellen Strukturauszeichnungen (häufig einfach „abgeschriebene“ Inhaltsverzeichnisse)
@@ -91,6 +91,40 @@ class: title-slide
   ```
 - Auszeichnung der entsprechenden Volltextpassagen in der OCR
 - Übernahme nach DTABf
+  + Seiten- → Dokumentebene
+  + *umspannende* `div`-Struktur
+
+---
+
+# Konvertierungsworkflow - Herausforderungen
+
+- Verknüpfung zwischen Struktur und Text auf Seitenebene (keine Lokalisierung im Text)
+  + Lösungsansatz: Lokalisierung des Strukturelements auf der Seite über Textvergleich
+- mangelndes Strukturauszeichnungsinventar in ABBYY-FineReader-XML
+  + Lösungsansatz: Konvertierung in feingranulareres OCR-Format
+- nicht standardgemäße Seitenverknüpfung in ` <mets:structLink />` durch *anonyme* IDs
+  + Lösungsansatz: Auflösung der anonymen IDs
+- nicht erfasste Vakatseiten und Abbildungen
+  + Lösungsansatz: Ergänzung leerer ABBYY-FineReader-XML-Dateien
+  
+---
+
+# Konvertierungsworkflow - Workflow
+
+1. Konvertierung ABBYY-FineReader-XML nach hOCR
+  - mit Hilfe eines XSLT-Stylesheets (https://github.com/OCR-D/format-converters)
+2. Anreicherung der hOCR-Dateien mit Strukturelementen
+  - Python-Skript `tocrify` (https://github.com/deutschestextarchiv/tocrify)
+3. Aggregation der Seiten- zur Dokumentebene
+  - Anpassung der hOCR-Tool-Suite (https://github.com/tmbdev/hocr-tools)
+4. Konvertierung von hOCR nach DTABf
+  - mit Hilfe eines XSLT-Stylesheets (https://github.com/OCR-D/format-converters)
+  - Integration der MODS-Metadaten in den TEI-Header
+5. Integration in die Korpusinfrastruktur des Zentrums Sprache sowie in DTAQ
+
+---
+
+# Konvertierungsworkflow - Probleme
 
 ---
 
