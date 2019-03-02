@@ -124,18 +124,31 @@ class: title-slide
 
 ---
 
-# Konvertierung - `tocrify`
+# Konvertierung - tocrify
 
 - Ziel: *Lokalisierung* des Strukturelements auf der Seite (Ermittlung der Koordinaten)
 - Rezept:
-  + Vergleich des zu lokalisierenden Textes `\(t\)` mit allen Position in der OCR `\(o_i\in O=o_1\ldots o_n\)`
+  + Vergleich des zu lokalisierenden Textes `\(t\)` mit allen Positionen `\(i\)` in der OCR `\(O=o_1\ldots o_n\)`
   + minimaler Editierabstand zwischen `\(t\)` und `\(o_i\ldots o_{i+|t|}\)` als Platzierungskriterium
   + Inklusion aller Zeilen, die Teile der optimalen OCR-Sequenz enthalten
 - Auszeichnung der ermittelten Zeilen als `TYPE` (i.e. Strukturtyp nach METS)
 
 ---
 
+# Konvertierung - tocrify-Beispiel
+
+---
+
 # Konvertierung - Probleme
+
+1. Textvergleich
+  + stillschweigende Normalisierung (ſ → s, th → t etc.)
+  + Übernahme des Inhaltsverzeichnisses
+    * zusätzliche Nummerierung
+    * Groß-/Kleinschreibung
+  + suboptimale Textqualität durch Einsatz veralteter FineReader-Version (i.e. „präimpact“)
+2. Fehlende Label
+  + 35 von 298 Büchern mit Kapiteltitel *Text*
 
 ---
 
