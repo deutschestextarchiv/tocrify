@@ -180,6 +180,64 @@ class: title-slide
 
 ---
 
+# DSDK-Korpus - Analyse
+
+- Analysekette:
+    + Zerlegung des Fließtextes in Wörter und Sätze: **Tokenisierung**
+    + Bestimmung der Grundform der Wörter: **Lemmatisierung**
+    + Bestimmung der tatsächlichen Wortart eines Wortes: **PoS-Tagging**
+    + Normalisierung historischer Schreibvarianten: **Kanonisierung**
+    + Auszählen gemeinsamer Vorkommen von Wörtern bzw. Wortgruppen: **distributionelle Semantik**
+- vollautomatisch möglich (mit akzeptabler Qualität)
+- zwei grundsätzliche Ansätze der Modellierung:
+    + auf Basis von Expertenwissen **manuell** erstellte Regeln
+    + auf Basis manuell erstellter Beispiele **automatisch** induzierte Regeln
+
+---
+
+# DSDK-Korpus - Suche
+
+- Indizierung der Text- und Metadaten
+    + Wortattribute
+        * Token, Lemma, PoS, kanonische Schreibung ...
+    + Metadatenattribute
+        * Autor, Titel, Datum, Textsorte ...
+- Abfragetypen
+    + Term-Expansion: [Query Lizard: `Bank`](http://kaskade.dwds.de/dtaos/lizard.perl?q=Bank)
+    + Konjunktion, satzlokal: [`Bank {Geld, Kredit}`](http://kaskade.dwds.de/dstar/dta+dwds/dta.perl?fmt=kwic&corpus=&limit=50&ctx=&q=Bank+%7BGeld%2CKredit%7D+%23in+s+%23asc_date&_s=submit)
+    + oder termlokal: [`Kohl with $p=NE`](http://kaskade.dwds.de/dstar/zeit/dta.perl?q=Kohl+with+%24p%3DNE+%23dsc_date%5B1982%2C1999%5D)
+    + Wildcards, Phrasen, RegEx: [`"anti* #2 Propaganda"`](http://kaskade.dwds.de/dstar/zeit/dta.perl?q=%22anti%2A+%232+Propaganda%22+%23left%5B0%5D&fmt=kwic&ctx=6)
+
+---
+
+
+# DSDK-Korpus - Wortverlaufskurven
+
+- **Häufigkeit eines Wort über einen zeitlichen Verlauf**
+- nutzen Textsammlungen als Basis
+    + nur sinnvoll bei entsprechender zeitlicher Stratifizierung
+- Metadaten für jeden Text:
+    + *Datum* (Jahr)
+    + *Textklasse* (Belletristik, Gebrauchsliteratur, Wissenschaft, Zeitung)
+    + und viele weitere (i.e. beliebige Suchabfragen)
+- Darstellung:
+    + relativ (Vorkommen pro Million)
+        * 
+.red[Achtung!] Kurven werden häufig geglättet, da nicht für jedes Jahr ausreichend und gleich viele Daten verfügbar sind
+    + in absoluten Zahlen
+
+---
+
+# DSDK-Korpus - Beispiele
+
+---
+
+class: title-slide
+
+# Diskussion
+
+---
+
 class: title-slide
 
 # Danke für Ihre Aufmerksamkeit
