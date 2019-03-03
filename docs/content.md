@@ -238,6 +238,46 @@ class: title-slide
 
 ---
 
+# Diskussion
+
+- DSDK: einzigartige Quelle für die historische, sprachwissenschaftliche und soziologische Forschung
+- vergleichende Beforschung durch Integration in CLARIN-D-Korpusinfrastruktur möglich
+    + Grenzboten
+    + Deutsches Textarchiv
+    + ...
+- relativ hohe Einstiegshürde bei der Arbeit mit quantitativen Auswertungen
+    + methodische Grundlagen
+    + technische Details
+      * Abfragesprache
+      * Parameterauswahl
+- Sprechen Sie uns an!
+
+---
+
+# Diskussion
+
+- mehr Quellen, bessere Forschung?
+- Text- und insbesondere Strukturerkennungsqualität **ausbaufähig**
+- Übertrag des neuesten Standes der Forschung im Bereich OCR/OLR in die bibliothekarische Praxis überfällig
+    + ABBYY FineReader seit Impact in den kritischen Bereichen unverändert
+    + Projekte wie READ (Transkribus), Kallimachos oder OCR-D aufwendig gefördert
+    + in den Bibliotheken jedoch außer im Projektkontext kaum Veränderung
+    + Google ist keine Lösung!
+- **einfache Modifikationen** im (Text-)Digitalisierungsworkflow mit enormer Wirkung
+    + Cropping!
+    + Text-/Bildverknüpfung auf Koordinatenebene
+
+---
+
+# Diskussion
+
+- Wer kann die Konsolidierung und *Produktivierung* von Forschungsergebnissen perspektivisch übernehmen?
+- Wer kümmert sich um Pflege und Weiterentwicklung von Texterkennungssoftware?
+- Wie kann eine kontinuierliche Optimierung der Text- und Strukturdaten in den Bibliotheken realisiert werden?
+- Wie können Forschungsinfrastrukturen wie CLARIN-D auch nach Ende ihrer Förderung weiterbestehen?
+
+---
+
 class: title-slide
 
 # Danke für Ihre Aufmerksamkeit
