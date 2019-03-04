@@ -137,9 +137,13 @@ class: title-slide
 
 # Konvertierung - tocrify-Beispiel
 
-| Bild | Struktur |
-|:----------------:|:-------------------:|
-| <img src="figures/heading_ex.jpg"/> | `<div TYPE="section" label="3. Der Vulkan Niragongo in Nordwest-Ruanda" />` |
+- Bild
+  .center[<img src="figures/heading_ex.jpg/>]
+- Strukturelement
+  ```xml
+  <div TYPE="section" label="3. Der Vulkan Niragongo in Nordwest-Ruanda" />
+  ```
+- OCR
 
 ---
 
@@ -207,14 +211,11 @@ class: title-slide
     + Metadatenattribute
         * Autor, Titel, Datum, Textsorte ...
 - Abfragetypen
-    + Term-Expansion: [Query Lizard: `Bank`](http://kaskade.dwds.de/dtaos/lizard.perl?q=Bank)
-    + Konjunktion, satzlokal: [`Bank {Geld, Kredit}`](http://kaskade.dwds.de/dstar/dsdk/dta.perl?fmt=kwic&corpus=&limit=50&ctx=&q=Bank+%7BGeld%2CKredit%7D+%23in+s+%23asc_date&_s=submit)
-    + oder termlokal: [`Kohl with $p=NE`](http://kaskade.dwds.de/dstar/zeit/dta.perl?q=Kohl+with+%24p%3DNE+%23dsc_date%5B1982%2C1999%5D)
-    + Wildcards, Phrasen, RegEx: [`"anti* #2 Propaganda"`](http://kaskade.dwds.de/dstar/zeit/dta.perl?q=%22anti%2A+%232+Propaganda%22+%23left%5B0%5D&fmt=kwic&ctx=6)
-
----
-
-# DSDK-Korpus - Beispiele
+    + einfache Suche: [`Tat`](http://kaskade.dwds.de/dstar/dsdk/dstar.perl?q=Tat&fmt=kwic&start=1&limit=10&ctx=8&debug=)
+    + Term-Expansion: [Query Lizard: `Tat`](http://kaskade.dwds.de/dtaos/lizard.perl?q=Tat)
+    + Konjunktion, satzlokal: [`Bank {Geld, Kredit}`](http://kaskade.dwds.de/dstar/dsdk/dstar.perl?fmt=kwic&corpus=&limit=50&ctx=&q=Bank+%7BGeld%2CKredit%7D+%23in+s+%23asc_date&_s=submit)
+    + oder termlokal: [`das with $p=PDS`](http://kaskade.dwds.de/dstar/dsdk/dstar.perl?fmt=kwic&corpus=&limit=50&ctx=&q=das+with+%24p%3DPDS&_s=submit)
+    + Wildcards, Phrasen, RegEx: [`"anti* #2 Propaganda"`](http://kaskade.dwds.de/dstar/dsdk/dstar.perl?q=%22anti%2A+%232+Propaganda%22+%23left%5B0%5D&fmt=kwic&ctx=6)
 
 ---
 
@@ -236,6 +237,20 @@ class: title-slide
 ---
 
 # DSDK-Korpus - Beispiele
+
+- [Tokenbestand](http://kaskade.dwds.de/dstar/dsdk/hist.perl?fmt=hist&pformat=svg&q=*&_s=submit&n=abs&smooth=none&sl=1&w=0&wb=0&pr=0&xr=*%3A*&yr=0%3A*&psize=840%2C480)
+
+---
+
+# DWDS - Wortverlaufskurven
+
+.center[<img src="figures/flugzeug_vs_eisenbahn.svg" style="width:800px"/>]
+
+---
+
+# DWDS - Wortverlaufskurven
+
+.center[<img src="figures/kanzler_vs_kanzlerin.svg" style="width:800px"/>]
 
 ---
 
@@ -266,6 +281,17 @@ class: title-slide
 ---
 
 # DSDK-Korpus - Beispiele
+
+- [Malaria](http://kaskade.dwds.de/dstar/dsdk/diacollo/?query=Malaria&_s=submit&date=1870%3A*&slice=5&score=ld&kbest=30&cutoff=&profile=2&format=cloud&global=1&groupby=&eps=0)
+  + Chinin als Mittel gegen Malaria bekannt seit dem 17. Jh.
+  + gewonnen aus der Rinde des Chinarindenbaums (endemisch in Südamerika)
+  + erhöhter Bedarf durch Kolonisation
+- [Kunst](http://kaskade.dwds.de/dstar/dsdk/diacollo/?query=Kunst&date=1870%3A*&slice=5&score=ld&kbest=30&cutoff=&profile=2&format=cloud&global=1&groupby=&eps=0)
+  + Anfang des 20. Jahrhunderts verstärkte Auseinandersetzung mit der afrikanischen, eingeborenen Kunst
+  + insbesondere durch den aufkommenden Expressionismus, in Deutschland speziell durch die Künstlervereinigung *Brücke*
+- [Kunst vs. Kultur](http://kaskade.dwds.de/dstar/dsdk/diacollo/?query=Kunst&_s=submit&bquery=Kultur&date=&slice=10&bdate=&bslice=10&score=ld&kbest=10&diff=adiff&profile=diff-2&format=html&groupby=l%2Cp%3DNN&eps=0)
+  + Unterschiede und Gemeinsamkeiten zwischen Begriffen sichtbar machen
+
 
 ---
 

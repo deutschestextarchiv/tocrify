@@ -52,7 +52,7 @@ ul > li > ol > li > ul > li { font-size:1.2rem }
   position: fixed;
   top: 0px;
   left: 0px;
-  height: 80px;
+  height: 160px;
   width: 100%;
   text-align: left;
 }
