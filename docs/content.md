@@ -102,7 +102,7 @@ class: title-slide
   + Lösungsansatz: Lokalisierung des Strukturelements auf der Seite über Textvergleich
 - mangelndes Strukturauszeichnungsinventar in ABBYY-FineReader-XML
   + Lösungsansatz: Konvertierung in feingranulareres OCR-Format
-- nicht standardgemäße Seitenverknüpfung in ` <mets:structLink />` durch *anonyme* IDs
+- nicht standardgemäße Seitenverknüpfung in `<mets:structLink/>` durch *anonyme* IDs
   + Lösungsansatz: Auflösung der anonymen IDs
 - nicht erfasste Vakatseiten und Abbildungen
   + Lösungsansatz: Ergänzung leerer ABBYY-FineReader-XML-Dateien
@@ -137,21 +137,25 @@ class: title-slide
 
 # Konvertierung - tocrify-Beispiel
 
+| Bild | Struktur |
+|:----------------:|:-------------------:|
+| <img src="figures/heading_ex.jpg"/> | `<div TYPE="section" label="3. Der Vulkan Niragongo in Nordwest-Ruanda" />` |
+
 ---
 
 # Konvertierung - Probleme
 
 1. Textvergleich
-  + stillschweigende Normalisierung (ſ → s, th → t etc.)
-  + Übernahme des Inhaltsverzeichnisses
-    * zusätzliche Nummerierung
-    * Groß-/Kleinschreibung
-  + suboptimale Textqualität durch Einsatz veralteter FineReader-Version (i.e. „präimpact“)
+    + stillschweigende Normalisierung (ſ → s, th → t etc.)
+    + Übernahme des Inhaltsverzeichnisses
+        * zusätzliche Nummerierung
+        * Groß-/Kleinschreibung
+    + suboptimale Textqualität durch Einsatz veralteter FineReader-Version (i.e. „präimpact“)
 2. fehlende Label
-  + 35 von 256 Büchern mit Kapiteltitel *Text*
+    + 35 von 256 Büchern mit Kapiteltitel *Text*
 3. fehlerhafte Layouterkennung
-  + Überschriften in verschiedene Absätze unterteilt: gelöst
-  + Überschriften auf verschiedene Absätze verteilt: noch nicht gelöst
+    + Überschriften in verschiedene Absätze unterteilt: gelöst
+    + Überschriften auf verschiedene Absätze verteilt: noch nicht gelöst
 4. fehlendes Cropping
 
 ---
@@ -204,12 +208,15 @@ class: title-slide
         * Autor, Titel, Datum, Textsorte ...
 - Abfragetypen
     + Term-Expansion: [Query Lizard: `Bank`](http://kaskade.dwds.de/dtaos/lizard.perl?q=Bank)
-    + Konjunktion, satzlokal: [`Bank {Geld, Kredit}`](http://kaskade.dwds.de/dstar/dta+dwds/dta.perl?fmt=kwic&corpus=&limit=50&ctx=&q=Bank+%7BGeld%2CKredit%7D+%23in+s+%23asc_date&_s=submit)
+    + Konjunktion, satzlokal: [`Bank {Geld, Kredit}`](http://kaskade.dwds.de/dstar/dsdk/dta.perl?fmt=kwic&corpus=&limit=50&ctx=&q=Bank+%7BGeld%2CKredit%7D+%23in+s+%23asc_date&_s=submit)
     + oder termlokal: [`Kohl with $p=NE`](http://kaskade.dwds.de/dstar/zeit/dta.perl?q=Kohl+with+%24p%3DNE+%23dsc_date%5B1982%2C1999%5D)
     + Wildcards, Phrasen, RegEx: [`"anti* #2 Propaganda"`](http://kaskade.dwds.de/dstar/zeit/dta.perl?q=%22anti%2A+%232+Propaganda%22+%23left%5B0%5D&fmt=kwic&ctx=6)
 
 ---
 
+# DSDK-Korpus - Beispiele
+
+---
 
 # DSDK-Korpus - Wortverlaufskurven
 
@@ -225,6 +232,36 @@ class: title-slide
         * 
 .red[Achtung!] Kurven werden häufig geglättet, da nicht für jedes Jahr ausreichend und gleich viele Daten verfügbar sind
     + in absoluten Zahlen
+
+---
+
+# DSDK-Korpus - Beispiele
+
+---
+
+# DSDK-Korpus - Diacollo
+
+- *Kollokation*: häufiges gemeinsames Auftreten zweier Wörter in vordefiniertem Kontext (Satz, Absatz etc.)
+  + enge semantische Beziehungen (*Schüler* → *Lehrer*) 
+  + Sachverhalte (*Schule* → *Reform*) 
+  + feste Phrasen (*Hänschen* → *Hans*)
+- **Grundidee:**
+  + Ermittlung aller Kollokationen eines Eingabebegriffes
+  + Ordnung nach deren Assoziationsgrad zum Eingabebegriff
+  + Beispiel [*Begriff*](http://kaskade.dwds.de/dstar/dta/diacollo/?query=Begriff&date=&slice=50&score=ld&kbest=20&cutoff=&profile=2&format=cloud&groupby=&eps=0) im DTA
+
+---
+
+# DSDK-Korpus - Diacollo
+
+> *„Die Bedeutung eines Wortes ist sein Gebrauch in der Sprache.“*<br />
+> Ludwig Wittgenstein (Philosophische Untersuchungen)
+
+- DiaCollo: diachrone Kollokationsanalyse 
+  + Untersuchungszeiträume frei skalierbar (jahresweise, dekadenweise etc.)
+  + Visualisierungsoptionen für Abfrageergebnisse (Wordclouds, Bubble, Gmotion, HTML‐Listen)
+  + prinzipiell eine Kombination von Wortverlaufskurven und distributioneller Semantik
+- getestet an großen und mittelgroßen Korpora, darunter *Die Grenzboten* und *DDR-Presseportal*
 
 ---
 
