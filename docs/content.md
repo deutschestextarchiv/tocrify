@@ -250,7 +250,6 @@ class: title-slide
     + technische Details
       * Abfragesprache
       * Parameterauswahl
-- Sprechen Sie uns an!
 
 ---
 
@@ -260,7 +259,7 @@ class: title-slide
 - Text- und insbesondere Strukturerkennungsqualität **ausbaufähig**
 - Übertrag des neuesten Standes der Forschung im Bereich OCR/OLR in die bibliothekarische Praxis überfällig
     + ABBYY FineReader seit Impact in den kritischen Bereichen unverändert
-    + Projekte wie READ (Transkribus), Kallimachos oder OCR-D aufwendig gefördert
+    + Projekte wie READ, Kallimachos oder OCR-D aufwendig gefördert
     + in den Bibliotheken jedoch außer im Projektkontext kaum Veränderung
     + Google ist keine Lösung!
 - **einfache Modifikationen** im (Text-)Digitalisierungsworkflow mit enormer Wirkung
@@ -272,9 +271,9 @@ class: title-slide
 # Diskussion
 
 - Wer kann die Konsolidierung und *Produktivierung* von Forschungsergebnissen perspektivisch übernehmen?
-- Wer kümmert sich um Pflege und Weiterentwicklung von Texterkennungssoftware?
-- Wie kann eine kontinuierliche Optimierung der Text- und Strukturdaten in den Bibliotheken realisiert werden?
-- Wie können Forschungsinfrastrukturen wie CLARIN-D auch nach Ende ihrer Förderung weiterbestehen?
+- Wer kümmert sich um *Pflege und Weiterentwicklung* von Texterkennungssoftware?
+- Wie kann eine *kontinuierliche Optimierung* der Text- und Strukturdaten in den Bibliotheken realisiert werden?
+- Wie können Forschungsinfrastrukturen wie CLARIN-D auch nach *Ende ihrer Förderung* weiterbestehen?
 
 ---
 
