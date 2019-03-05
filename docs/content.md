@@ -137,7 +137,7 @@ class: title-slide
 
 # Konvertierung - tocrify-Beispiel
 
-<img src="figures/heading_ex.jpg" />
+<img src="figures/heading_ex.jpg" width="200px" />
   
 ```xml
   <div TYPE="section"
