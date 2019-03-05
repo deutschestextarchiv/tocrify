@@ -137,13 +137,23 @@ class: title-slide
 
 # Konvertierung - tocrify-Beispiel
 
-- Bild
-  .center[<img src="figures/heading_ex.jpg/>]
+- Bild <img src="figures/heading_ex.jpg/>
 - Strukturelement
   ```xml
-  <div TYPE="section" label="3. Der Vulkan Niragongo in Nordwest-Ruanda" />
+  <div TYPE="section"
+       LABEL="3. Der Vulkan Niragongo in Nordwest-Ruanda" />
   ```
 - OCR
+  ```xml
+  <text>
+    <par>
+      <line>
+        <charParams>2</charParams>
+      </line>
+      <line>
+        <charParams>D</charParams>
+        …
+  ```
 
 ---
 
@@ -161,6 +171,12 @@ class: title-slide
     + Überschriften in verschiedene Absätze unterteilt: gelöst
     + Überschriften auf verschiedene Absätze verteilt: noch nicht gelöst
 4. fehlendes Cropping
+
+---
+
+# Konvertierung - Cropping
+
+.center[<img src="figures/cropping.jpg" />]
 
 ---
 
@@ -320,12 +336,12 @@ class: title-slide
 
 - mehr Quellen, bessere Forschung?
 - Text- und insbesondere Strukturerkennungsqualität **ausbaufähig**
-- Übertrag des neuesten Standes der Forschung im Bereich OCR/OLR in die bibliothekarische Praxis überfällig
+- Übertrag des Standes der Forschung im Bereich OCR in die bibliothekarische Praxis!
     + ABBYY FineReader seit Impact in den kritischen Bereichen unverändert
     + Projekte wie READ, Kallimachos oder OCR-D aufwendig gefördert
     + in den Bibliotheken jedoch außer im Projektkontext kaum Veränderung
     + Google ist keine Lösung!
-- **einfache Modifikationen** im (Text-)Digitalisierungsworkflow mit enormer Wirkung
+- **einfache Modifikationen** mit enormer Wirkung
     + Cropping!
     + Text-/Bildverknüpfung auf Koordinatenebene
 
