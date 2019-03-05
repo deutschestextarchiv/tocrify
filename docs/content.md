@@ -137,14 +137,13 @@ class: title-slide
 
 # Konvertierung - tocrify-Beispiel
 
-- Bild <img src="figures/heading_ex.jpg/>
-- Strukturelement
-  ```xml
+<img src="figures/heading_ex.jpg" />
+  
+```xml
   <div TYPE="section"
        LABEL="3. Der Vulkan Niragongo in Nordwest-Ruanda" />
-  ```
-- OCR
-  ```xml
+```
+```xml
   <text>
     <par>
       <line>
@@ -153,7 +152,7 @@ class: title-slide
       <line>
         <charParams>D</charParams>
         …
-  ```
+```
 
 ---
 
