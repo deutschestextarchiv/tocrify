@@ -17,6 +17,13 @@ measure of confidence.
 `tocrify` is implemented in Python 3. In the following, we assume a working Python 3
 (tested versions 3.5 and 3.6) installation.
 
+### Clone the repository
+The first installation step is the cloning of the repository:
+```console
+$ git clone https://github.com/deutschestextarchiv/tocrify.git
+$ cd tocrify
+```
+
 ### virtualenv
 Using [`virtualenv`](https://virtualenv.pypa.io/en/stable/) is highly recommended, although not strictly necessary for installing `tocrify`. It may be installed via:
 ```console
