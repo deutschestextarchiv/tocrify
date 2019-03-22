@@ -9,7 +9,7 @@ from tocrify import Hocr
 
 @click.command()
 @click.argument('mets', type=click.File('rb'))
-@click.option('-o', '--out-dir', type=click.Path(exists=True), required=True, help="Directory for storing the updated OCR files")
+@click.option('-o', '--out-dir', type=click.Path(exists=True), required=True, help="Existing directory for storing the updated OCR files")
 @click.option('-O', '--order-file', type=click.File('w'), help="Destination for file order information")
 def cli(mets,out_dir,order_file):
     """ METS: Input METS XML """
