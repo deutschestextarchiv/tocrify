@@ -57,8 +57,8 @@ Usage: tocrify [OPTIONS] METS
   METS: Input METS XML
 
 Options:
-  -o, --out-dir PATH         Directory for storing the updated OCR files
-                             [required]
+  -o, --out-dir PATH         Existing directory for storing the updated OCR
+                             files [required]
   -O, --order-file FILENAME  Destination for file order information
   --help                     Show this message and exit.
 ```
