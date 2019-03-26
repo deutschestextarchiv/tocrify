@@ -4,14 +4,18 @@ from __future__ import absolute_import
 import os
 import click
 
+from pkg_resources import resource_filename, Requirement
+
 from tocrify import Mets
 from tocrify import Hocr
+from tocrify import Mets2hocr
 
 @click.command()
 @click.argument('mets', type=click.File('rb'))
 @click.option('-o', '--out-dir', type=click.Path(exists=True), required=True, help="Existing directory for storing the updated OCR files")
 @click.option('-O', '--order-file', type=click.File('w'), help="Destination for file order information")
-def cli(mets,out_dir,order_file):
+@click.option('-m', '--mapping', type=click.File('r'), default=os.path.realpath(resource_filename(Requirement.parse("tocrify"), 'tocrify/data/mets2hocr.yml')), help="METS to hOCR structural types mapping")
+def cli(mets,out_dir,order_file, mapping):
     """ METS: Input METS XML """
     
     click.echo("%s" % out_dir, err=True)
@@ -22,6 +26,10 @@ def cli(mets,out_dir,order_file):
     mets = Mets.read(mets)
 
     #
+    # read in METS-hOCR mapping
+    mets2hocr = Mets2hocr.read(mapping)
+
+    #
     # iterate over all elements of the logical struct map
     hocr_file_hocr = {}   
     for logical in mets.get_logicals():
@@ -29,7 +37,7 @@ def cli(mets,out_dir,order_file):
         if physical is not None:
             path = "%s/%s" % (mwd, mets.get_hocr_for_physical(physical).file_name)
             if path not in hocr_file_hocr:
-                hocr_file_hocr[path] = Hocr.read(path)
+                hocr_file_hocr[path] = Hocr.read(path, mets2hocr)
             ingested = hocr_file_hocr[path].ingest_structure(logical)
 
     #
@@ -38,7 +46,7 @@ def cli(mets,out_dir,order_file):
         file_hocr = mets.get_hocr_for_physical(mets.get_physical(mets.file_order[order]))
         path = "%s/%s" % (mwd, file_hocr.file_name)
         if path not in hocr_file_hocr:
-            hocr = Hocr.read(path)
+            hocr = Hocr.read(path, mets2hocr)
         else:
             hocr = hocr_file_hocr[path]
         out_filename = "%s/%s" % (out_dir, os.path.basename(file_hocr.file_name))

@@ -60,6 +60,7 @@ Options:
   -o, --out-dir PATH         Existing directory for storing the updated OCR
                              files [required]
   -O, --order-file FILENAME  Destination for file order information
+  -m, --mapping FILENAME     METS to hOCR structural types mapping
   --help                     Show this message and exit.
 ```
 The METS file bundles all information on `tocrify`'s input, namely the `hOCR` files which have to be referenced in dedicated file groups (`fileGrp[@USE='FULLTEXT HOCR']`). With the help of the parameter `-o`, the output directory for the updated `hOCR` files can be specified. If given the parameter `-O`, `tocrify` writes the physical order of the `hOCR` files (which is not necessarily equal to their alphanumeric order) to the specified destination.

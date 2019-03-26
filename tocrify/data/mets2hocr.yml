@@ -1,0 +1,37 @@
+chapter:
+    0: "ocr_chapter"
+    1: "ocr_section"
+    2: "ocr_subsection"
+    3: "ocr_subsubsection"
+section:
+    0: "ocr_chapter"
+    1: "ocr_section"
+    2: "ocr_subsection"
+    3: "ocr_subsubsection"
+title_page:
+    0: "ocr_title_page"
+    1: ""
+contents:
+    0: "ocr_contents"
+    1: "ocr_contents"
+preface:
+    0: "ocr_preface"
+    1: "ocr_preface"
+index:
+    0: "ocr_index"
+    1: "ocr_index"
+illustration:
+    0: "ocr_illustration"
+    1: "ocr_illustration"
+dedication:
+    0: "ocr_dedication"
+    1: "ocr_dedication"
+map:
+    0: "ocr_map"
+    1: "ocr_map"
+additional:
+    0: "ocr_additional"
+    1: "ocr_additional"
+spine:
+    0: ""
+    1: ""

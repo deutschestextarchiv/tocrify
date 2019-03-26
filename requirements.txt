@@ -1,3 +1,4 @@
 click
 lxml
 python-Levenshtein
+pyyaml
