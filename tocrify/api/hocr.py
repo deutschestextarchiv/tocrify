@@ -4,6 +4,7 @@ from lxml import etree
 
 import os
 import Levenshtein
+import yaml
 
 ns = {
      'xlink' : "http://www.w3.org/1999/xlink",
@@ -12,35 +13,54 @@ ns = {
 XLINK = "{%s}" % ns['xlink']
 XHTML = "{%s}" % ns['xhtml']
 
-hocr2mets = {
-    ("chapter", 0 ) : "ocr_chapter",
-    ("section", 0 ) : "ocr_chapter",
-    ("title_page", 0 ) : "ocr_title_page",
-    ("contents", 0 ) : "ocr_contents",
-    ("preface", 0 ) : "ocr_preface",
-    ("illustration", 0 ) : "ocr_illustration",
-    ("index", 0 ) : "ocr_index",
-    ("index", 1 ) : "ocr_index",
-    ("cover_back", 0 ) : "ocr_chapter",
-    ("dedication", 0 ) : "ocr_dedication",
-    ("map", 0 ) : "ocr_map",
-    ("additional", 0 ) : "ocr_additional",
-    ("chapter", 1 ) : "ocr_section",
-    ("section", 1 ) : "ocr_section",
-    ("preface", 1 ) : "ocr_preface",
-    ("illustration", 1 ) : "ocr_illustration",
-    ("dedication", 1 ) : "ocr_dedication",
-    ("title_page", 1 ) : "",
-    ("contents", 1 ) : "ocr_contents",
-    ("chapter", 2 ) : "ocr_subsection",
-    ("section", 2 ) : "ocr_subsection",
-    ("chapter", 3 ) : "ocr_subsubsection",
-    ("section", 3 ) : "ocr_subsubsection"
-}
+class Mets2hocr:
+
+    def __init__(self):
+        """
+        The constructor.
+        """
+        self.map = None
+
+    @classmethod
+    def read(cls, source):
+        """
+        Reads in mapping from a given (file) source.
+        :param source: mapping (file) source.
+        """
+        if hasattr(source, 'read'):
+            return cls.fromfile(source)
+        if os.path.exists(source):
+            return cls.fromfile(source)
+
+    @classmethod
+    def fromfile(cls, path):
+        """
+        Reads in mapping from a given file source.
+        :param str path: Path to the mapping.
+        """
+        i = cls()
+        i._fromfile(path)
+        return i
+
+    def _fromfile(self, path):
+        """
+        Reads in mapping from a given file source.
+        :param str path: Path to the mapping.
+        """
+        self.map = yaml.load(path)
+
+    def get(self, mets_type, depth):
+        """
+        Returns the hOCR strucutural type for a
+        given METS structural type and its depth.
+        :param str mets_type: Name of the METS structural type.
+        :param int depth: Depth of the METS structure within the struct_map
+        """
+        return self.map[mets_type][depth]
 
 class Hocr:
 
-    def __init__(self):
+    def __init__(self, mets2hocr):
         """
         The constructor.
         """
@@ -51,6 +71,7 @@ class Hocr:
         self.text = ""
         self.line_index_struct = {}
         self.line_index = 0
+        self.mets2hocr = mets2hocr
     
     def write(self, stream):
         """
@@ -60,23 +81,23 @@ class Hocr:
         stream.write(etree.tostring(self.tree.getroot(), encoding="utf-8"))
 
     @classmethod
-    def read(cls, source):
+    def read(cls, source, mets2hocr):
         """
         Reads in hOCR from a given (file) source.
         :param source: hOCR (file) source.
         """
         if hasattr(source, 'read'):
-            return cls.fromfile(source)
+            return cls.fromfile(source, mets2hocr)
         if os.path.exists(source):
-            return cls.fromfile(source)
+            return cls.fromfile(source, mets2hocr)
 
     @classmethod
-    def fromfile(cls, path):
+    def fromfile(cls, path, mets2hocr):
         """
         Reads in hOCR from a given file source.
         :param str path: Path to a hOCR document.
         """
-        i = cls()
+        i = cls(mets2hocr)
         i._fromfile(path)
         return i
 
@@ -225,7 +246,7 @@ class Hocr:
                     # replace paragraph elment with hOCR element representation
                     pars[0].tag = XHTML + "h%i" % (logical.depth + 1)
                     # replace type attribute
-                    pars[0].set("class", hocr2mets[(logical.type,logical.depth)])
+                    pars[0].set("class", self.mets2hocr.get(logical.type, logical.depth))
                     ingested = True
                     # adjust the position for searching for the next match
                     self.insert_index = end + 1
@@ -233,7 +254,7 @@ class Hocr:
         # textless structures
         else:
             # covers and title pages span the whole page, insert an element directly under ocr_page
-            if logical.type == "cover_front" or logical.type == "cover_back" or logical.type == "title_page":
+            if logical.type == "cover_front" or logical.type == "cover_back" or logical.type == "title_page" or logical.type == "spine":
                 cover = etree.Element(XHTML + "div")
                 cover.set("class", "ocr_%s" % logical.type)
                 insert_node = self.tree.getroot().find(".//" + XHTML + "div[@class='ocr_page']")
@@ -248,7 +269,7 @@ class Hocr:
                 carea = self.get_next_unmodified_carea()
                 if carea is not None:
                     struct = etree.Element(XHTML + "h%i" % (logical.depth + 1))
-                    struct.set("class", hocr2mets[(logical.type,logical.depth)])
+                    struct.set("class", self.mets2hocr.get(logical.type, logical.depth))
                     carea.insert(0, struct)
                     self.set_carea_as_modified(carea)
 
