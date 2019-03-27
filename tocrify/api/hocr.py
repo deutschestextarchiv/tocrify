@@ -47,7 +47,7 @@ class Mets2hocr:
         Reads in mapping from a given file source.
         :param str path: Path to the mapping.
         """
-        self.map = yaml.load(path)
+        self.map = yaml.safe_load(path)
 
     def get(self, mets_type, depth):
         """
@@ -119,9 +119,10 @@ class Hocr:
         for carea in self.get_careas():
             for par in self.get_pars_in_carea(carea):
                 for line in self.get_lines_in_par(par):
-                    if line.text:
-                        self.text += line.text
-                        for i in range(0, len(line.text)):
+                    line_text = "".join(line.itertext())
+                    if line_text:
+                        self.text += line_text
+                        for i in range(0, len(line_text)):
                             self.line_index_struct[self.line_index] = line
                             self.line_index += 1
         
@@ -223,15 +224,15 @@ class Hocr:
                         cmp_lines.append(self.line_index_struct[begin + l])
                         # get paragraph of line
                         par = cmp_lines[-1].getparent()
-                        # add it to the first paragraph containing the match and subsequenty
+                        # add it to the first paragraph containing the match and subsequently
                         # move the lines around in order to create a single paragraph
                         # for each match
                         if not pars:
                             pars.append(par)
-                        elif pars[0] != par:
+                        if pars[0] != par:
                             pars[0].append(self.line_index_struct[begin + l])
 
-                            # Fixme: something is odd here, try catch should not be necessary
+                            # FIXME: something is odd here, try catch should not be necessary
                             try:
                                 par.remove(self.line_index_struct[begin + l])
                             except:
@@ -240,16 +241,26 @@ class Hocr:
                             if len(par) == 0:
                                 par.getparent().remove(par)
 
-                # TODO: compare number of lines in paragraph to number of matched lines!!!
-                #print(len(pars[0]),len(cmp_lines))
                 if len(pars[0]) == len(cmp_lines):
                     # replace paragraph elment with hOCR element representation
                     pars[0].tag = XHTML + "h%i" % (logical.depth + 1)
                     # replace type attribute
                     pars[0].set("class", self.mets2hocr.get(logical.type, logical.depth))
                     ingested = True
-                    # adjust the position for searching for the next match
-                    self.insert_index = end + 1
+                # par has to be split!
+                # we create a new element and insert it before the paragraph which
+                # contains multiple headings
+                elif len(pars[0]) > len(cmp_lines):
+                    new_h = etree.Element(XHTML + "h%i" % (logical.depth + 1))
+                    new_h.set("class", self.mets2hocr.get(logical.type, logical.depth))
+                    pars[0].getparent().insert(pars[0].getparent().index(pars[0]), new_h)
+                    for i in range(0, len(cmp_lines)):
+                        cmp_lines[i].getparent().remove(cmp_lines[i])
+                        new_h.append(cmp_lines[i])
+                    ingested = True
+
+                # adjust the position for searching for the next match
+                self.insert_index = end + 1
         
         # textless structures
         else:
