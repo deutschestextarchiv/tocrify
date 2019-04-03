@@ -22,6 +22,9 @@ title_page:
 contents:
     0: "ocr_contents"
     1: "ocr_contents"
+introduction:
+    0: "ocr_chapter"
+    1: "ocr_chapter"
 preface:
     0: "ocr_preface"
     1: "ocr_preface"
@@ -40,6 +43,9 @@ map:
 additional:
     0: "ocr_additional"
     1: "ocr_additional"
+advertising:
+    0: "ocr_advertising"
+    1: "ocr_advertising"
 spine:
     0: ""
     1: ""
