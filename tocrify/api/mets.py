@@ -37,7 +37,10 @@ class Physical:
         The constructor.
         """
         self.phys_id = node.get("ID")
-        self.hocr_id = node.xpath("./mets:fptr[starts-with(@FILEID, \"HOCR\")]", namespaces=ns)[0].get("FILEID")
+        # addressed ID formats:
+        # HOCR+ID (e.g. 'HOCR1856940')
+        # ID+HOCR (e.g. 'FILE_0010_FULLTEXT_HOCR')
+        self.hocr_id = node.xpath("./mets:fptr[contains(@FILEID, \"HOCR\")]", namespaces=ns)[0].get("FILEID")
 
 class FileHocr:
     """
@@ -134,8 +137,8 @@ class Mets:
                     stack.pop()
                 else:
                     stack.append(iter(e))
-                    # skip the title element (has DMDID)
-                    if (e.tag == METS + "div") and e.get("DMDID") == None:
+                    # skip the title element (has ADMID)
+                    if (e.tag == METS + "div") and not e.get("ADMID"):
                         yield (Logical(e, stack.__len__() - skipped - 1))
                     else:
                         skipped += 1

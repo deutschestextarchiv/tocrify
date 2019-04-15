@@ -18,7 +18,6 @@ from tocrify import Mets2hocr
 def cli(mets,out_dir,order_file, mapping):
     """ METS: Input METS XML """
     
-    click.echo("%s" % out_dir, err=True)
     mwd = os.path.abspath(os.path.dirname(mets.name))
 
     #
