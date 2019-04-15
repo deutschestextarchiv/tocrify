@@ -215,7 +215,7 @@ class Hocr:
             # all lines which contribute to the matching window are collected
             # to deal with multi-line labels
             if begin != -1:
-                end = begin + len(logical.label) - 1
+                end = begin + len(logical.label)
                 cmp_lines = []
                 pars = []
                 for l in range(0, end - begin):
