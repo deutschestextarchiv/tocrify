@@ -38,6 +38,14 @@ and activate it.
 $ . env/bin/activate
 ```
 
+### Python development library
+`tocrify` depends on [`python-Levenshtein`](https://github.com/ztane/python-Levenshtein). To build it, you may have to install the Python development library.
+
+E.g., on apt-based linux:
+```console
+$ sudo apt install libpython3-dev
+```
+
 ### Python requirements
 `tocrify` uses various 3rd party Python packages which may best be installed using `pip`:
 ```console
