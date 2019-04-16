@@ -56,6 +56,9 @@ class Mets2hocr:
         :param str mets_type: Name of the METS structural type.
         :param int depth: Depth of the METS structure within the struct_map
         """
+        # FIXME: depth should never be less than 0
+        if depth < 0:
+            depth = 0
         return self.map[mets_type][depth]
 
 class Hocr:
