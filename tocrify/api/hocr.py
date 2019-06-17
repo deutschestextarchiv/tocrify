@@ -113,7 +113,7 @@ class Hocr:
         Reads in hOCR from a given file source.
         :param str path: Path to a hOCR document.
         """
-        self.logger.info("Reading %s" % str(path))
+        self.logger.info("Reading %s", path)
         self.tree = etree.parse(path)
         self._spur(self.tree, path)
 
@@ -218,7 +218,7 @@ class Hocr:
         # ignore leading and closing whitespace
         label = logical.label.strip()
         # many structures are (regretfully) only labelled with 'Text'
-        if len(label) > 0 and self.text and label != "Text":
+        if len(label) and self.text and label != "Text":
 
             self.logger.debug("Search for '%s' %i" % (label, len(label)))
 
