@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 
 import os
+import logging
 import click
 
 from pkg_resources import resource_filename, Requirement
@@ -15,10 +16,15 @@ from tocrify import Mets2hocr
 @click.option('-o', '--out-dir', type=click.Path(exists=True), required=True, help="Existing directory for storing the updated OCR files")
 @click.option('-O', '--order-file', type=click.File('w'), help="Destination for file order information")
 @click.option('-m', '--mapping', type=click.File('r'), default=os.path.realpath(resource_filename(Requirement.parse("tocrify"), 'tocrify/data/mets2hocr.yml')), help="METS to hOCR structural types mapping")
-def cli(mets,out_dir,order_file, mapping):
+@click.option('-l', '--log-level', type=click.Choice(['DEBUG', 'INFO', 'WARN', 'ERROR', 'OFF']), default='WARN')
+def cli(mets,out_dir,order_file, mapping, log_level):
     """ METS: Input METS XML """
     
     mwd = os.path.abspath(os.path.dirname(mets.name))
+
+    #
+    # logging level
+    logging.basicConfig(level=logging.getLevelName(log_level))
 
     #
     # read in METS

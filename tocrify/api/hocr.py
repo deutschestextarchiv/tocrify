@@ -5,6 +5,7 @@ from lxml import etree
 import os
 import Levenshtein
 import yaml
+import logging
 
 ns = {
      'xlink' : "http://www.w3.org/1999/xlink",
@@ -75,6 +76,9 @@ class Hocr:
         self.line_index_struct = {}
         self.line_index = 0
         self.mets2hocr = mets2hocr
+
+        # logging
+        self.logger = logging.getLogger(__name__)
     
     def write(self, stream):
         """
@@ -109,6 +113,7 @@ class Hocr:
         Reads in hOCR from a given file source.
         :param str path: Path to a hOCR document.
         """
+        self.logger.info("Reading %s", path)
         self.tree = etree.parse(path)
         self._spur(self.tree, path)
 
@@ -122,7 +127,9 @@ class Hocr:
         for carea in self.get_careas():
             for par in self.get_pars_in_carea(carea):
                 for line in self.get_lines_in_par(par):
-                    line_text = "".join(line.itertext())
+                    # removes multiple whitespace introduced by pretty printing
+                    # adds a final whitespace
+                    line_text = " ".join("".join(line.itertext()).split()) + " "
                     if line_text:
                         self.text += line_text
                         for i in range(0, len(line_text)):
@@ -197,8 +204,8 @@ class Hocr:
                     index = k
                 if distance == 0:
                     break
-            return index
-        return -1
+            return (index, len(text[index:index+len(label)].strip()))
+        return (-1,-1)
 
     def ingest_structure(self, logical):
         """
@@ -207,18 +214,22 @@ class Hocr:
         :param Logical logical: The logical element to be ingested. 
         """
         ingested = False
-
+        
+        # ignore leading and closing whitespace
+        label = logical.label.strip()
         # many structures are (regretfully) only labelled with 'Text'
-        if len(logical.label) > 0 and self.text and logical.label != "Text":
-            
-            begin = self.__get_best_insert_index(self.text, logical.label, 0, True)
+        if len(label) and self.text and label != "Text":
+
+            self.logger.debug("Search for '%s' %i" % (label, len(label)))
+
+            begin, length = self.__get_best_insert_index(self.text, label, 0, True)
 
             # we have a suitable match (i.e. below the quality restriction),
             # full line labels are assumed,
             # all lines which contribute to the matching window are collected
             # to deal with multi-line labels
             if begin != -1:
-                end = begin + len(logical.label)
+                end = begin + length - 1
                 cmp_lines = []
                 pars = []
                 for l in range(0, end - begin):
