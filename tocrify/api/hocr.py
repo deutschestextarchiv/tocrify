@@ -71,6 +71,7 @@ class Hocr:
 
         self.tree = None
         self.insert_index = 0
+        self.last_inserted_elem = None
         self.path = ""
         self.text = ""
         self.line_index_struct = {}
@@ -202,6 +203,7 @@ class Hocr:
                 if distance <= minimum:
                     minimum = distance
                     index = k
+                    self.logger.debug("New best match at index %i: %s" % (index, text[index:index+len(label)].strip()))
                 if distance == 0:
                     break
             return (index, len(text[index:index+len(label)].strip()))
@@ -220,7 +222,7 @@ class Hocr:
         # many structures are (regretfully) only labelled with 'Text'
         if len(label) and self.text and label != "Text":
 
-            self.logger.debug("Search for '%s' %i" % (label, len(label)))
+            self.logger.debug("Search for '%s' with len %i on level %i on page %s." % (label, len(label), logical.depth, self.path))
 
             begin, length = self.__get_best_insert_index(self.text, label, 0, True)
 
@@ -260,24 +262,45 @@ class Hocr:
                     pars[0].tag = XHTML + "h%i" % (logical.depth + 1)
                     # replace type attribute
                     pars[0].set("class", self.mets2hocr.get(logical.type, logical.depth))
+                    self.last_inserted_elem = pars[0]
                     ingested = True
                 # par has to be split!
-                # we create a new element and insert it before the paragraph which
-                # contains multiple headings
                 elif len(pars[0]) > len(cmp_lines):
-                    new_h = etree.Element(XHTML + "h%i" % (logical.depth + 1))
-                    new_h.set("class", self.mets2hocr.get(logical.type, logical.depth))
-                    pars[0].getparent().insert(pars[0].getparent().index(pars[0]), new_h)
-                    for i in range(0, len(cmp_lines)):
-                        cmp_lines[i].getparent().remove(cmp_lines[i])
-                        new_h.append(cmp_lines[i])
+                    # iterate over lines and find split places
+                    i = check_index = 0
+                    insert_par = None
+                    # we are modifying pars[0] but need to compate to original
+                    len_src_par = len(pars[0])
+                    while i < len_src_par:
+                        line = pars[0][check_index]
+                        # the first line of the identified heading is the split point
+                        if line == cmp_lines[0]:
+                            new_h = etree.Element(XHTML + "h%i" % (logical.depth + 1))
+                            new_h.set("class", self.mets2hocr.get(logical.type, logical.depth))
+                            pars[0].getparent().insert(pars[0].getparent().index(pars[0]) + 1, new_h)
+                            self.last_inserted_elem = new_h
+                            # append the rest of the lines belonging to the heading to the new element
+                            for j in range(0, len(cmp_lines)):
+                                cmp_lines[j].getparent().remove(cmp_lines[j])
+                                new_h.append(cmp_lines[j])
+                                i += 1
+                            # now create a new par for all following lines
+                            insert_par = etree.Element(XHTML + "p")
+                            new_h.getparent().insert(new_h.getparent().index(new_h) + 1, insert_par)
+                        elif insert_par != None:
+                            pars[0].remove(line)
+                            insert_par.append(line)
+                            i += 1
+                        else:
+                            i += 1
+                            check_index += 1
                     ingested = True
 
                 # adjust the position for searching for the next match
                 self.insert_index = end + 1
         
-        # textless structures
-        else:
+        # textless structures and structures with non-matchable text
+        if not ingested:
             # covers and title pages span the whole page, insert an element directly under ocr_page
             if logical.type == "cover_front" or logical.type == "cover_back" or logical.type == "title_page" or logical.type == "spine":
                 cover = etree.Element(XHTML + "div")
@@ -291,11 +314,18 @@ class Hocr:
                 pass
             # generic insertion
             else:
-                carea = self.get_next_unmodified_carea()
-                if carea is not None:
-                    struct = etree.Element(XHTML + "h%i" % (logical.depth + 1))
-                    struct.set("class", self.mets2hocr.get(logical.type, logical.depth))
-                    carea.insert(0, struct)
-                    self.set_carea_as_modified(carea)
+                # new element
+                struct = etree.Element(XHTML + "h%i" % (logical.depth + 1))
+                struct.set("class", self.mets2hocr.get(logical.type, logical.depth))
+
+                # try to insert after last inserted element
+                if self.last_inserted_elem != None:
+                    self.last_inserted_elem.getparent().insert(self.last_inserted_elem.getparent().index(self.last_inserted_elem) + 1, struct)
+                else:
+                    insert_node = self.tree.getroot().find(".//" + XHTML + "div[@class='ocr_page']")
+                    insert_node.insert(0, struct)
+
+                # remember
+                self.last_inserted_elem = struct
 
         return ingested
