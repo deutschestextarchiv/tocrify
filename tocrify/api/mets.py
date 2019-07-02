@@ -143,18 +143,33 @@ class Mets:
                     else:
                         skipped += 1
 
-    def get_first_physical_for_logical(self, logical):
+    def get_first_physical_for_logical(self, logical, backwards=False):
         """
         Returns the first exisiting div element from the physical struct map corresponding to
         the given logical element (via a struct link).
         :param Logical logical: The logical element to be evaluated.
+        :param Boolean backwards: Search backwards if no direct match is possible
         """
         if self.structLink is not None:
-            for sm_link in self.structLink.xpath("./mets:smLink[@xlink:from=\"%s\"]" % logical.log_id, namespaces=ns):
-                phys_id = sm_link.get(XLINK + 'to')
-                physicals = self.structMap_physical.xpath(".//mets:div[@TYPE=\"page\" and @ID=\"%s\"]" % phys_id, namespaces=ns)
-                if len(physicals) > 0:
-                    return Physical(physicals[0])
+            sm_links = self.structLink.xpath("./mets:smLink[@xlink:from=\"%s\"]" % logical.log_id, namespaces=ns)
+            first_phys_id = sm_links[0].get(XLINK + 'to')
+            physicals = self.structMap_physical.xpath(".//mets:div[@TYPE=\"page\" and @ID=\"%s\"]" % first_phys_id, namespaces=ns)
+            # direct match, i.e. same strategy for forward and backward search
+            if len(physicals) > 0:
+                return Physical(physicals[0])
+            # search for the first existing ID
+            else:
+                for sm_link in sm_links[1:]:
+                    phys_id = sm_link.get(XLINK + 'to')
+                    physicals = self.structMap_physical.xpath(".//mets:div[@TYPE=\"page\" and @ID=\"%s\"]" % phys_id, namespaces=ns)
+                    if len(physicals) > 0:
+                        # forward search is simple
+                        if backwards == False:
+                            return Physical(physicals[0])
+                        # backward search uses `ORDER`
+                        else:
+                            order = int(physicals[0].get("ORDER"))
+                            return self.get_physical(self.file_order[order - 1])
 
     def get_hocr_for_physical(self, physical):
         """

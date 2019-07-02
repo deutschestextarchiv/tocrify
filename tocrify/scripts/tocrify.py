@@ -17,7 +17,8 @@ from tocrify import Mets2hocr
 @click.option('-O', '--order-file', type=click.File('w'), help="Destination for file order information")
 @click.option('-m', '--mapping', type=click.File('r'), default=os.path.realpath(resource_filename(Requirement.parse("tocrify"), 'tocrify/data/mets2hocr.yml')), help="METS to hOCR structural types mapping")
 @click.option('-l', '--log-level', type=click.Choice(['DEBUG', 'INFO', 'WARN', 'ERROR', 'OFF']), default='WARN')
-def cli(mets,out_dir,order_file, mapping, log_level):
+@click.option('-b', '--backwards/--no-backwards', default=False, help="In cases of so-called 'ghost pages', search backwards for a non-ghost page (default: don't)")
+def cli(mets,out_dir,order_file, mapping, log_level, backwards):
     """ METS: Input METS XML """
     
     mwd = os.path.abspath(os.path.dirname(mets.name))
@@ -38,7 +39,7 @@ def cli(mets,out_dir,order_file, mapping, log_level):
     # iterate over all elements of the logical struct map
     hocr_file_hocr = {}   
     for logical in mets.get_logicals():
-        physical = mets.get_first_physical_for_logical(logical)
+        physical = mets.get_first_physical_for_logical(logical, backwards)
         if physical is not None:
             path = "%s/%s" % (mwd, mets.get_hocr_for_physical(physical).file_name)
             if path not in hocr_file_hocr:
