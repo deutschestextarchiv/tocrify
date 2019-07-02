@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os
-
 from setuptools import setup, find_packages
-from pkg_resources import resource_filename, Requirement
 
 with open('README.md') as f:
     readme = f.read()
