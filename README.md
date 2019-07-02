@@ -4,8 +4,9 @@ Pimp your OCR with structural information from METS.
 ## Background
 OCR as delivered by commercial service providers (e.g. https://www.semantics.de/visual_library/) is
 usually completely independent from costly collected structural data represented in METS files. This
-tool aims at providing this missing connection. It was developed in the course of the DFG-funded project
-[Digitale Sammlung Deutcher Kolonialismus](https://www.suub.uni-bremen.de/ueber-uns/projekte/dsdk/).
+tool aims at providing this missing connection. It was initially developed in the course of the DFG-funded
+project [Digitale Sammlung Deutcher Kolonialismus](https://www.suub.uni-bremen.de/ueber-uns/projekte/dsdk/).
+The development continues at the [Saxon State and University Library Dresden](https://www.slub-dresden.de).
 
 ## Implementation
 To create a mapping between the manually collected structural information in a METS file and the
@@ -69,6 +70,7 @@ Options:
                              files [required]
   -O, --order-file FILENAME  Destination for file order information
   -m, --mapping FILENAME     METS to hOCR structural types mapping
+  -l, --log-level [DEBUG|INFO|WARN|ERROR|OFF]
   --help                     Show this message and exit.
 ```
 The METS file bundles all information on `tocrify`'s input, namely the `hOCR` files which have to be referenced in dedicated file groups (`fileGrp[@USE='FULLTEXT HOCR']`). With the help of the parameter `-o`, the output directory for the updated `hOCR` files can be specified. If given the parameter `-O`, `tocrify` writes the physical order of the `hOCR` files (which is not necessarily equal to their alphanumeric order) to the specified destination.
