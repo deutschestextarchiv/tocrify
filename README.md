@@ -81,4 +81,4 @@ A sample invocation could look like:
 ```
 
 ## Acknowledgements
-The name of this tool was proposed by @kba. Parts of the code for METS handling was inspired by [metsrw](https://github.com/artefactual-labs/mets-reader-writer/).
+The name of this tool was proposed by @kba. Parts of the code for METS handling were inspired by [metsrw](https://github.com/artefactual-labs/mets-reader-writer/).
