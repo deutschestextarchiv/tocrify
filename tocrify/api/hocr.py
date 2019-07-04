@@ -178,6 +178,15 @@ class Hocr:
             if self.line_index_struct[self.insert_index].getparent().getparent() != carea:
                 break
             self.insert_index = i
+
+    def __compute_fuzzy_distance(self, text1, text2):
+        """
+        Returns a somewhat modified edit distance which respects certain
+        OCR characteristics.
+        :param String text1: A string.
+        :param String text2: Another string.
+        """
+        return Levenshtein.distance(text1.translate({ord(i): None for i in '. '}), text2.translate({ord(i): None for i in '. '}))
     
     def __get_best_insert_index(self, text, label, minimum=0, lower=False):
         """
@@ -199,7 +208,7 @@ class Hocr:
             index = -1
             # the moving window
             for k in range(self.insert_index, len(text) - len(label)):
-                distance = Levenshtein.distance(label, text[k:k+len(label)])
+                distance = self.__compute_fuzzy_distance(label, text[k:k+len(label)])
                 if distance <= minimum:
                     minimum = distance
                     index = k
@@ -259,10 +268,16 @@ class Hocr:
 
                 if len(pars[0]) == len(cmp_lines):
                     # replace paragraph elment with hOCR element representation
-                    pars[0].tag = XHTML + "h%i" % (logical.depth + 1)
-                    # replace type attribute
-                    pars[0].set("class", self.mets2hocr.get(logical.type, logical.depth))
-                    self.last_inserted_elem = pars[0]
+                    if pars[0].tag == XHTML + "p":
+                        pars[0].tag = XHTML + "h%i" % (logical.depth + 1)
+                        # replace type attribute
+                        pars[0].set("class", self.mets2hocr.get(logical.type, logical.depth))
+                        self.last_inserted_elem = pars[0]
+                    # the paragraph serves as a heading already!
+                    else:
+                        new_h = etree.Element(XHTML + "h%i" % (logical.depth + 1))
+                        new_h.set("class", self.mets2hocr.get(logical.type, logical.depth))
+                        pars[0].getparent().insert(pars[0].getparent().index(pars[0]) + 1, new_h)
                     ingested = True
                 # par has to be split!
                 elif len(pars[0]) > len(cmp_lines):
