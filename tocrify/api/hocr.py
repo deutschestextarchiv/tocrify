@@ -240,6 +240,7 @@ class Hocr:
             # all lines which contribute to the matching window are collected
             # to deal with multi-line labels
             if begin != -1:
+                # FIXME: this way, we cannot handle matches of length 1
                 end = begin + length - 1
                 cmp_lines = []
                 pars = []
@@ -266,7 +267,7 @@ class Hocr:
                             if len(par) == 0:
                                 par.getparent().remove(par)
 
-                if len(pars[0]) == len(cmp_lines):
+                if pars and len(pars[0]) == len(cmp_lines):
                     # replace paragraph elment with hOCR element representation
                     if pars[0].tag == XHTML + "p":
                         pars[0].tag = XHTML + "h%i" % (logical.depth + 1)
@@ -280,7 +281,7 @@ class Hocr:
                         pars[0].getparent().insert(pars[0].getparent().index(pars[0]) + 1, new_h)
                     ingested = True
                 # par has to be split!
-                elif len(pars[0]) > len(cmp_lines):
+                elif pars and len(pars[0]) > len(cmp_lines):
                     # iterate over lines and find split places
                     i = check_index = 0
                     insert_par = None

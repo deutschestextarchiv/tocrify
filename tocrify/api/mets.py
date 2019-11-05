@@ -152,7 +152,11 @@ class Mets:
         """
         if self.structLink is not None:
             sm_links = self.structLink.xpath("./mets:smLink[@xlink:from=\"%s\"]" % logical.log_id, namespaces=ns)
-            first_phys_id = sm_links[0].get(XLINK + 'to')
+            try:
+                first_phys_id = sm_links[0].get(XLINK + 'to')
+            except:
+                print("Non-existing structLink for %s" % logical.log_id)
+                sys.exit(1)
             physicals = self.structMap_physical.xpath(".//mets:div[@TYPE=\"page\" and @ID=\"%s\"]" % first_phys_id, namespaces=ns)
             # direct match, i.e. same strategy for forward and backward search
             if len(physicals) > 0:
